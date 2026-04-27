@@ -3,7 +3,7 @@ import { useState } from "react";
 import { CommentLogo, NotificationsLogo, UnlikeLogo } from "../../assets/contants";
 
 // 2. Recibimos 'username' como prop
-const PostFooter = ({ username }) => { 
+const PostFooter = ({ username,isProfilePage }) => { 
     const [liked, setLiked] = useState(false);
     const [likes, setLikes] = useState(100);
 
@@ -18,7 +18,7 @@ const PostFooter = ({ username }) => {
     };
 
     return (
-        <Box mb={10}> {/* Contenedor para dar espacio al final del post */}
+        <Box mb={10} marginTop={"auto"}> {/* Contenedor para dar espacio al final del post */}
             <Flex alignItems={"center"} gap={4} w={"full"} pt={0} mb={2} mt={4}>
                 <Box onClick={handleLike} cursor={"pointer"} fontSize={18}>
                     {!liked ? <NotificationsLogo /> : <UnlikeLogo />}
@@ -33,16 +33,20 @@ const PostFooter = ({ username }) => {
                 {likes} likes
             </Text>
 
+         {!isProfilePage&&(
+            <>
             <Text fontSize='sm' fontWeight={700}>
-                {username}{" "}
-                <Text as='span' fontWeight={400}>
+             {username}{" "}
+            <Text as='span' fontWeight={400}>
                     Feeling good
-                </Text>
+            </Text>
             </Text>
 
             <Text fontSize='sm' color={"gray"} cursor={"pointer"}>
                 View all 1,000 comments
             </Text>
+            </>
+         )}
 
             <Flex 
             alignItems={"center"}
