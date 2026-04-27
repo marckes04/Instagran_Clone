@@ -8,33 +8,16 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 const AuthForm = () => {
   const [isLogin, setIsLogin] = useState(true);
-  const navigate = useNavigate();
   const [inputs, setInputs] = useState({
     email: "",
     password: "",
     confirmPassword: "",
   });
 
-const handleAuth = () => {
-    // Validación: Si NO hay email o NO hay password
-    if (!inputs.email || !inputs.password) {
-      alert("Please fill in all fields.");
-      return;
-    }
 
-    // Si es registro, también validamos la confirmación
-    if (!isLogin && !inputs.confirmPassword) {
-      alert("Please confirm your password.");
-      return;
-    }
-
-    // Si todo está ok, redirigimos
-    navigate("/");
-  };
 
   return (
     <>
@@ -74,7 +57,6 @@ const handleAuth = () => {
             colorScheme={"blue"} 
             size={"sm"} 
             fontSize={14} 
-            onClick={handleAuth}
           >
             {isLogin ? "Log In" : "Sign Up"}
           </Button>
