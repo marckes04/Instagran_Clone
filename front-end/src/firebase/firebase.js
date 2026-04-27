@@ -4,7 +4,7 @@ import {getAuth} from "firebase/auth";
 import{getFireStore, getStorage} from "firebase/storage"
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDVbQuvyHn0Xkw116VV-8RQnq3YrrGFLkU",
+  apiKey: "",
   authDomain: "insta-clone-yt-8f933.firebaseapp.com",
   projectId: "insta-clone-yt-8f933",
   storageBucket: "insta-clone-yt-8f933.firebasestorage.app",
