@@ -2,11 +2,13 @@ import { collection, doc, getDocs, query, setDoc, where } from "firebase/firesto
 import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
 import { auth, firestore } from "../../firebase/firebase";
 import useShowToast from "./useShowToast";
+import useAuthStore from "../../Store/authStore";
 
 const useSignUpWithEmailAndPassword = () => {
   const [createUserWithEmailAndPassword, , loading, error] =
     useCreateUserWithEmailAndPassword(auth);
   const showToast = useShowToast();
+  const loginUser = useAuthStore((state) => state.login);
 
   const signup = async (inputs) => {
     // 1. Validate empty fields
@@ -17,7 +19,10 @@ const useSignUpWithEmailAndPassword = () => {
 
     // 2. Prevent duplicate usernames
     const usersRef = collection(firestore, "users");
-    const q = query(usersRef, where("username", "==", inputs.username.trim().toLowerCase()));
+    const q = query(
+      usersRef,
+      where("username", "==", inputs.username.trim().toLowerCase())
+    );
     const querySnapshot = await getDocs(q);
 
     if (!querySnapshot.empty) {
@@ -37,7 +42,7 @@ const useSignUpWithEmailAndPassword = () => {
         return;
       }
 
-      // 4. Save user document in Firestore
+      // 4. Save user document in Firestore and Zustand store
       if (newUser) {
         const userDoc = {
           uid: newUser.user.uid,
@@ -54,6 +59,7 @@ const useSignUpWithEmailAndPassword = () => {
 
         await setDoc(doc(firestore, "users", newUser.user.uid), userDoc);
         localStorage.setItem("user-info", JSON.stringify(userDoc));
+        loginUser(userDoc);
         showToast("Success", "Account created successfully", "success");
       }
     } catch (err) {

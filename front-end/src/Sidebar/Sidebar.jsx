@@ -9,6 +9,7 @@ import {
   SearchLogo, 
   NotificationsLogo 
 } from '../assets/contants';
+import useLogout from '../components/hooks/useLogout';
 
 const Sidebar = () => {
   const sidebarItems = [
@@ -36,11 +37,7 @@ const Sidebar = () => {
     },
   ];
 
-  const handleLogout = () => {
-    // Aquí irá tu lógica de Firebase/Auth más adelante
-    console.log("Logging out...");
-  };
-
+  const {handleLogout,isLoggingOut} = useLogout()
   return (
     <Box
       height={"100vh"}
@@ -127,9 +124,13 @@ const Sidebar = () => {
             cursor={"pointer"}
           >
             <BiLogOut size={25} />
-            <Box display={{ base: "none", md: "block" }}>
+            <Button display={{ base: "none", md: "block" }}
+            variant={"ghost"}
+            _hover={{bg:"transparent"}}
+            isLoading={isLoggingOut}
+            >
               Logout
-            </Box>
+            </Button>
           </Flex>
         </Tooltip>
       </Flex>
