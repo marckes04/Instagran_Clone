@@ -14,7 +14,8 @@ const useLogin = () => {
 
   const login = async (inputs) => {
     if (!inputs.email || !inputs.password) {
-      return showToast("Error", "Please fill all the fields", "error");
+      showToast("Error", "Por favor completa todos los campos", "error");
+      return;
     }
 
     try {
@@ -23,9 +24,9 @@ const useLogin = () => {
         inputs.password
       );
 
-      // React-firebase-hooks returns null/undefined on failed credentials
       if (!userCred) {
-        return showToast("Error", "Invalid email or password", "error");
+        showToast("Error", "Correo o contraseña incorrectos", "error");
+        return;
       }
 
       const docRef = doc(firestore, "users", userCred.user.uid);
@@ -49,7 +50,6 @@ const useLogin = () => {
           posts: [],
           createdAt: Date.now(),
         };
-
         await setDoc(docRef, userData);
       }
 
@@ -57,7 +57,7 @@ const useLogin = () => {
       loginUser(userData);
       navigate(`/${userData.username}`);
     } catch (err) {
-      showToast("Error", err.message || "Invalid email or password", "error");
+      showToast("Error", err.message, "error");
     }
   };
 

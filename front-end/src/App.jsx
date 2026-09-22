@@ -17,8 +17,9 @@ function App() {
         />
         <Route
           path="/auth"
-          element={!authUser ? <Authpage /> : <Navigate to={`/${authUser?.username}`} />}
+          element={!authUser ? <Authpage /> : <Navigate to="/" />}
         />
+        {/* Asegúrate de que tenga exactamente :username */}
         <Route path="/:username" element={<ProfilePage />} />
       </Routes>
     </PageLayout>
