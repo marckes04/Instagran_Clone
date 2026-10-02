@@ -43,7 +43,6 @@ const ProfilePost = ({ post }) => {
 
     setIsDeleting(true);
     try {
-      // 1. Delete image from Firebase Storage (posts/ plural)
       const imageRef = ref(storage, `posts/${post.id}`);
       try {
         await deleteObject(imageRef);
@@ -51,16 +50,13 @@ const ProfilePost = ({ post }) => {
         console.warn("Storage deletion error or file not found:", storageError);
       }
 
-      // 2. Remove post ID reference from user document
       const userRef = doc(firestore, "users", authUser.uid);
       await updateDoc(userRef, {
         posts: arrayRemove(post.id),
       });
 
-      // 3. Delete the post document from Firestore
       await deleteDoc(doc(firestore, "posts", post.id));
 
-      // 4. Update Zustand state stores
       deletePost(post.id);
       if (decrementPostCount) decrementPostCount(post.id);
 
@@ -74,7 +70,6 @@ const ProfilePost = ({ post }) => {
 
   return (
     <>
-      {/* Grid Thumbnail */}
       <GridItem
         cursor={"pointer"}
         borderRadius={4}
@@ -125,7 +120,6 @@ const ProfilePost = ({ post }) => {
         />
       </GridItem>
 
-      {/* Post Modal */}
       <Modal
         isOpen={isOpen}
         onClose={onClose}
@@ -145,7 +139,6 @@ const ProfilePost = ({ post }) => {
               maxH={"90vh"}
               minH={"50vh"}
             >
-              {/* Left Column: Image */}
               <Flex
                 borderRadius={4}
                 overflow={"hidden"}
@@ -158,14 +151,12 @@ const ProfilePost = ({ post }) => {
                 <Image src={post?.imageURL} alt="profile post" />
               </Flex>
 
-              {/* Right Column: User details, comments, and actions */}
               <Flex
                 flex={1}
                 flexDir={"column"}
                 px={10}
                 display={{ base: "none", md: "flex" }}
               >
-                {/* Header */}
                 <Flex alignItems={"center"} justifyContent={"space-between"}>
                   <Flex alignItems={"center"} gap={4}>
                     <Avatar
@@ -195,7 +186,6 @@ const ProfilePost = ({ post }) => {
 
                 <Divider my={4} bg={"gray.500"} />
 
-                {/* Comments List */}
                 <VStack w="full" alignItems={"start"} maxH={"350px"} overflowY={"auto"}>
                   {post?.caption && (
                     <Comment
@@ -206,14 +196,14 @@ const ProfilePost = ({ post }) => {
                     />
                   )}
 
+                  {/* Corregido: etiqueta con C mayúscula y key segura */}
                   {post?.comments?.map((comment, index) => (
-                    <Comment key={index} comment={comment} />
+                    <Comment key={comment.id || index} comment={comment} />
                   ))}
                 </VStack>
 
                 <Divider my={4} bg={"gray.800"} />
 
-                {/* Footer */}
                 <PostFooter isProfilePage={true} post={post} />
               </Flex>
             </Flex>

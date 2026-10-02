@@ -1,4 +1,4 @@
-import { Avatar, Flex, Skeleton, SkeletonCircle, Text } from "@chakra-ui/react";
+import { Avatar, Flex, Text } from "@chakra-ui/react";
 import { timeAgo } from "../../utils/timeAgo"; // Ajusta la ruta a donde guardaste la función
 
 const Comment = ({ createdAt, username, profilePic, text, comment }) => {
