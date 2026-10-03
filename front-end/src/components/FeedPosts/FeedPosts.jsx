@@ -1,5 +1,5 @@
 import { Container, VStack, Flex, SkeletonCircle, Skeleton, Box } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+
 
 // --- ESTA ES LA LÍNEA QUE TE FALTA ---
 import FeedPost from "./FeedPost"; 

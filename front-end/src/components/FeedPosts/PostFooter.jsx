@@ -6,6 +6,7 @@ import {
   Input,
   InputRightElement,
   Button,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { useState, useRef } from "react";
 import {
@@ -16,13 +17,17 @@ import {
 import usePostComment from "../hooks/usePostComment";
 import useAuthStore from "../../Store/authStore";
 import useLikePost from "../hooks/useLikePost";
+import CommentModal from "../modals/CommentModal";
 
 const PostFooter = ({ post, username, isProfilePage }) => {
   const authUser = useAuthStore((state) => state.user);
   const { isCommenting, handlePostComment } = usePostComment();
   const [comment, setComment] = useState("");
   const commentRef = useRef(null);
-  const { handleLikePost, isLiked,likes } = useLikePost(post);
+  const { handleLikePost, isLiked, likes } = useLikePost(post);
+
+  // Steuerung des Modals
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const handleSubmitComment = async () => {
     if (!comment.trim()) return;
@@ -32,7 +37,7 @@ const PostFooter = ({ post, username, isProfilePage }) => {
 
   return (
     <Box mb={10} marginTop={"auto"}>
-      {/* Iconos de Like y Comentario */}
+      {/* Like- und Kommentar-Icons */}
       <Flex alignItems={"center"} gap={4} w={"full"} pt={0} mb={2} mt={4}>
         <Box onClick={handleLikePost} cursor={"pointer"} fontSize={18}>
           {!isLiked ? <NotificationsLogo /> : <UnlikeLogo />}
@@ -47,12 +52,10 @@ const PostFooter = ({ post, username, isProfilePage }) => {
         </Box>
       </Flex>
 
-      {/* Contador de Likes */}
       <Text fontWeight={600} fontSize={"sm"}>
         {likes} likes
       </Text>
 
-      {/* Si NO es el modal del perfil (es el feed de inicio) muestra caption y total de comentarios */}
       {!isProfilePage && (
         <>
           <Text fontSize="sm" fontWeight={700}>
@@ -62,15 +65,26 @@ const PostFooter = ({ post, username, isProfilePage }) => {
             </Text>
           </Text>
 
+          {/* Klick-Trigger zum Öffnen des Modals */}
           {post?.comments?.length > 0 && (
-            <Text fontSize="sm" color={"gray"} cursor={"pointer"}>
+            <Text
+              fontSize="sm"
+              color={"gray"}
+              cursor={"pointer"}
+              onClick={onOpen}
+            >
               View all {post.comments.length} comments
             </Text>
+          )}
+
+          {/* Rendern des Kommentar-Modals */}
+          {isOpen && (
+            <CommentModal isOpen={isOpen} onClose={onClose} post={post} />
           )}
         </>
       )}
 
-      {/* Input para agregar comentario */}
+      {/* Eingabefeld für neue Kommentare */}
       {authUser && (
         <Flex
           alignItems={"center"}
