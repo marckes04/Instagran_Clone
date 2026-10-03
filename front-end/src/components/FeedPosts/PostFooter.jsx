@@ -7,7 +7,7 @@ import {
   InputRightElement,
   Button,
 } from "@chakra-ui/react";
-import { useState,useRef } from "react";
+import { useState, useRef } from "react";
 import {
   CommentLogo,
   NotificationsLogo,
@@ -15,16 +15,14 @@ import {
 } from "../../assets/contants";
 import usePostComment from "../hooks/usePostComment";
 import useAuthStore from "../../Store/authStore";
-
+import useLikePost from "../hooks/useLikePost";
 
 const PostFooter = ({ post, username, isProfilePage }) => {
   const authUser = useAuthStore((state) => state.user);
-  const [liked, setLiked] = useState(post?.likes?.includes(authUser?.uid) || false);
-  const [likes, setLikes] = useState(post?.likes?.length || 0);
   const { isCommenting, handlePostComment } = usePostComment();
   const [comment, setComment] = useState("");
   const commentRef = useRef(null);
-
+  const { handleLikePost, isLiked,likes } = useLikePost(post);
 
   const handleSubmitComment = async () => {
     if (!comment.trim()) return;
@@ -32,34 +30,29 @@ const PostFooter = ({ post, username, isProfilePage }) => {
     setComment("");
   };
 
-  const handleLike = () => {
-    if (liked) {
-      setLiked(false);
-      setLikes(likes - 1);
-    } else {
-      setLiked(true);
-      setLikes(likes + 1);
-    }
-  };
-
   return (
     <Box mb={10} marginTop={"auto"}>
+      {/* Iconos de Like y Comentario */}
       <Flex alignItems={"center"} gap={4} w={"full"} pt={0} mb={2} mt={4}>
-        <Box onClick={handleLike} cursor={"pointer"} fontSize={18}>
-          {!liked ? <NotificationsLogo /> : <UnlikeLogo />}
+        <Box onClick={handleLikePost} cursor={"pointer"} fontSize={18}>
+          {!isLiked ? <NotificationsLogo /> : <UnlikeLogo />}
         </Box>
 
-        <Box cursor={"pointer"} fontSize={18} onClick={
-          ()=> commentRef.current.focus()
-        }>
+        <Box
+          cursor={"pointer"}
+          fontSize={18}
+          onClick={() => commentRef.current.focus()}
+        >
           <CommentLogo />
         </Box>
       </Flex>
 
+      {/* Contador de Likes */}
       <Text fontWeight={600} fontSize={"sm"}>
         {likes} likes
       </Text>
 
+      {/* Si NO es el modal del perfil (es el feed de inicio) muestra caption y total de comentarios */}
       {!isProfilePage && (
         <>
           <Text fontSize="sm" fontWeight={700}>
@@ -77,37 +70,40 @@ const PostFooter = ({ post, username, isProfilePage }) => {
         </>
       )}
 
-      <Flex
-        alignItems={"center"}
-        gap={2}
-        justifyContent={"space-between"}
-        w={"full"}
-      >
-        <InputGroup>
-          <Input
-            variant={"flushed"}
-            placeholder={"Add a comment..."}
-            fontSize={14}
-            onChange={(e) => setComment(e.target.value)}
-            value={comment}
-            ref={commentRef}
-          />
-          <InputRightElement>
-            <Button
+      {/* Input para agregar comentario */}
+      {authUser && (
+        <Flex
+          alignItems={"center"}
+          gap={2}
+          justifyContent={"space-between"}
+          w={"full"}
+        >
+          <InputGroup>
+            <Input
+              variant={"flushed"}
+              placeholder={"Add a comment..."}
               fontSize={14}
-              color={"blue.500"}
-              fontWeight={600}
-              cursor={"pointer"}
-              _hover={{ color: "white" }}
-              bg={"transparent"}
-              onClick={handleSubmitComment}
-              isLoading={isCommenting}
-            >
-              Post
-            </Button>
-          </InputRightElement>
-        </InputGroup>
-      </Flex>
+              onChange={(e) => setComment(e.target.value)}
+              value={comment}
+              ref={commentRef}
+            />
+            <InputRightElement>
+              <Button
+                fontSize={14}
+                color={"blue.500"}
+                fontWeight={600}
+                cursor={"pointer"}
+                _hover={{ color: "white" }}
+                bg={"transparent"}
+                onClick={handleSubmitComment}
+                isLoading={isCommenting}
+              >
+                Post
+              </Button>
+            </InputRightElement>
+          </InputGroup>
+        </Flex>
+      )}
     </Box>
   );
 };
