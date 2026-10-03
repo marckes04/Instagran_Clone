@@ -187,8 +187,9 @@ const ProfilePost = ({ post }) => {
                 <Divider my={4} bg={"gray.500"} />
 
                 <VStack w="full" alignItems={"start"} maxH={"350px"} overflowY={"auto"}>
+                  
                   {post?.caption && (
-                    <Comment
+                    <caption
                       createdAt={post.createdAt}
                       username={userProfile?.username}
                       profilePic={userProfile?.profilePicURL}
