@@ -13,16 +13,16 @@ const useGetProfileById = (userId) => {
       setIsLoading(true);
       setUserProfile(null);
 
-      // Si no hay userId, evitamos peticiones innecesarias
+      // Falls userId nicht existiert, Ladezustand sofort beenden
       if (!userId) {
         setIsLoading(false);
         return;
       }
 
       try {
-        const userSnap = await getDoc(doc(firestore, "users", userId));
-        if (userSnap.exists()) {
-          setUserProfile(userSnap.data());
+        const userRef = await getDoc(doc(firestore, "users", userId));
+        if (userRef.exists()) {
+          setUserProfile(userRef.data());
         }
       } catch (error) {
         showToast("Error", error.message, "error");

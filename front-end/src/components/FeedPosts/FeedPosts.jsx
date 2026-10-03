@@ -3,13 +3,10 @@ import { useEffect, useState } from "react";
 
 // --- ESTA ES LA LÍNEA QUE TE FALTA ---
 import FeedPost from "./FeedPost"; 
+import useGetFeedPosts from "../hooks/useGetFeedPost";
 
 const FeedPosts = () => {
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    setTimeout(() => setIsLoading(false), 2000);
-  }, []);
+  const{isLoading,posts} = useGetFeedPosts()
 
   return (
     <Container maxW={"container.sm"} py={10} px={2}>
@@ -28,15 +25,7 @@ const FeedPosts = () => {
         </VStack>
       ))}
 
-      {!isLoading && (
-        <>
-          {/* Ahora que lo importaste, esto ya no dará error */}
-          <FeedPost img='/img1.png' username='burakorkmezz' avatar='/img1.png' />
-          <FeedPost img='/img2.png' username='joshua_j' avatar='/img2.png' />
-          <FeedPost img='/img3.png' username='janedoe' avatar='/img3.png' />
-          <FeedPost img='/img4.png' username='mario_martinez' avatar='/img4.png' />
-        </>
-      )}
+      {!isLoading && posts.length > 0 && posts.map((post) => <FeedPost key={post.id} post={post}/>)} 
     </Container>
   );
 };

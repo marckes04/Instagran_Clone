@@ -1,16 +1,17 @@
-import React from "react";
+// FeedPost.jsx
 import PostHeader from "./PostHeader";
-import { Box, Image } from "@chakra-ui/react";
 import PostFooter from "./PostFooter";
+import { Box, Image } from "@chakra-ui/react";
 
-const FeedPost = ({img,username,avatar}) => {
+const FeedPost = ({ post }) => {
   return (
     <>
-      <PostHeader username={username} avatar={avatar} />
-      <Box my={2} borderEndRadius={4} overflow={"hidden"}>
-        <Image src={img} alt={username} />
+      {/* Übergib das vollständige post-Objekt */}
+      <PostHeader post={post} />
+      <Box my={2} borderRadius={4} overflow={"hidden"}>
+        <Image src={post.imageURL} alt={"Feed Post"} />
       </Box>
-      <PostFooter username={username}/>
+      <PostFooter post={post} />
     </>
   );
 };
